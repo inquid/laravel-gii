@@ -3,8 +3,8 @@
 namespace Inquid\LaravelGii\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Contracts\Config\Repository;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class OrionTypescriptCommand extends Command
@@ -32,8 +32,6 @@ class OrionTypescriptCommand extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @param Repository $config
      */
     public function __construct(Repository $config)
     {
@@ -50,8 +48,9 @@ class OrionTypescriptCommand extends Command
         $controller = $this->argument('controller');
         $modelClass = $this->getModelClassFromController($controller);
 
-        if (!class_exists($modelClass)) {
+        if (! class_exists($modelClass)) {
             $this->error("Model for controller $controller does not exist.");
+
             return;
         }
 
@@ -66,20 +65,17 @@ class OrionTypescriptCommand extends Command
 
     /**
      * Get the model class name from the controller name.
-     *
-     * @param string $controller
-     * @return string
      */
     protected function getModelClassFromController(string $controller): string
     {
         $modelName = Str::replaceLast('Controller', '', $controller);
+
         return "App\\Models\\$modelName";
     }
 
     /**
      * Get the database connection for the model.
      *
-     * @param $modelInstance
      * @return string
      */
     protected function getConnection($modelInstance)
@@ -89,9 +85,6 @@ class OrionTypescriptCommand extends Command
 
     /**
      * Get the schema name for the given connection.
-     *
-     * @param string $connection
-     * @return string
      */
     protected function getSchema(string $connection): string
     {
@@ -100,9 +93,6 @@ class OrionTypescriptCommand extends Command
 
     /**
      * Generate the Orion TypeScript model using a template.
-     *
-     * @param string $controller
-     * @param string $table
      */
     protected function generateOrionModel(string $controller, string $table)
     {
@@ -110,8 +100,9 @@ class OrionTypescriptCommand extends Command
 
         // 1. Load the template file
         $templatePath = base_path('resources/templates/ts_model.template');
-        if (!file_exists($templatePath)) {
+        if (! file_exists($templatePath)) {
             $this->error("Template file not found at $templatePath.");
+
             return;
         }
         $templateContent = file_get_contents($templatePath);
@@ -139,10 +130,6 @@ class OrionTypescriptCommand extends Command
 
     /**
      * Map database column types to TypeScript types.
-     *
-     * @param string $table
-     * @param string $column
-     * @return string
      */
     protected function mapColumnType(string $table, string $column): string
     {
