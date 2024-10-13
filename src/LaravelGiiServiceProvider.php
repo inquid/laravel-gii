@@ -2,7 +2,7 @@
 
 namespace Inquid\LaravelGii;
 
-use Inquid\LaravelGii\Commands\LaravelGiiCommand;
+use Inquid\LaravelGii\Commands\OrionTypescriptCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -20,6 +20,6 @@ class LaravelGiiServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasViews()
             ->hasMigration('create_laravel_gii_table')
-            ->hasCommand(LaravelGiiCommand::class);
+            ->hasCommand(OrionTypescriptCommand::class);
     }
 }
