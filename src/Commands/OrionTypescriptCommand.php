@@ -106,7 +106,7 @@ class OrionTypescriptCommand extends Command
 
         $content .= "}>\n{\n    \n}";
 
-        $outputPath = base_path($this->config->get('gii.output_path', "resources/js/models/$modelName.ts"));
+        $outputPath = base_path($this->config->get('gii.output_path') . "$modelName.ts");
         file_put_contents($outputPath, $content);
     }
 }
