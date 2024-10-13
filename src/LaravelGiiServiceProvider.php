@@ -2,9 +2,9 @@
 
 namespace Inquid\LaravelGii;
 
+use Inquid\LaravelGii\Commands\LaravelGiiCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Inquid\LaravelGii\Commands\LaravelGiiCommand;
 
 class LaravelGiiServiceProvider extends PackageServiceProvider
 {
