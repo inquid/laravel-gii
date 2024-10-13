@@ -99,7 +99,7 @@ class OrionTypescriptCommand extends Command
     }
 
     /**
-     * Generate the Orion TypeScript model.
+     * Generate the Orion TypeScript model using a template.
      *
      * @param string $controller
      * @param string $table
@@ -107,20 +107,66 @@ class OrionTypescriptCommand extends Command
     protected function generateOrionModel(string $controller, string $table)
     {
         $modelName = Str::replaceLast('Controller', '', $controller);
-        $content = "import {Model} from \"@tailflow/laravel-orion/lib/model\";\n\n";
-        $content .= "export class $modelName extends Model<{\n";
 
+        // 1. Load the template file
+        $templatePath = base_path('resources/templates/ts_model.template');
+        if (!file_exists($templatePath)) {
+            $this->error("Template file not found at $templatePath.");
+            return;
+        }
+        $templateContent = file_get_contents($templatePath);
+
+        // 2. Generate the columns string
         $columns = Schema::getColumnListing($table);
+        $columnsString = '';
         foreach ($columns as $column) {
-            $type = 'string'; // You could enhance this to detect the proper TypeScript type based on the column type.
-            $content .= "    $column: $type,\n";
+            $type = $this->mapColumnType($table, $column); // Map to TypeScript types
+            $columnsString .= "    $column: $type;\n";
         }
 
-        $content .= "}>\n{
+        // 3. Replace placeholders in the template
+        $replacements = [
+            '{{ modelName }}' => $modelName,
+            '{{ columns }}' => rtrim($columnsString),
+        ];
 
-}";
+        $content = str_replace(array_keys($replacements), array_values($replacements), $templateContent);
 
+        // 4. Write the output file
         $outputPath = base_path("resources/js/models/$modelName.ts");
         file_put_contents($outputPath, $content);
+    }
+
+    /**
+     * Map database column types to TypeScript types.
+     *
+     * @param string $table
+     * @param string $column
+     * @return string
+     */
+    protected function mapColumnType(string $table, string $column): string
+    {
+        $type = Schema::getColumnType($table, $column);
+
+        switch ($type) {
+            case 'integer':
+            case 'bigint':
+            case 'smallint':
+            case 'tinyint':
+            case 'float':
+            case 'double':
+            case 'decimal':
+                return 'number';
+            case 'boolean':
+                return 'boolean';
+            case 'json':
+                return 'any';
+            case 'datetime':
+            case 'timestamp':
+            case 'date':
+                return 'Date';
+            default:
+                return 'string';
+        }
     }
 }

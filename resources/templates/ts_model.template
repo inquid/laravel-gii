@@ -1,0 +1,7 @@
+import { Model } from "@tailflow/laravel-orion/lib/model";
+
+export class {{ modelName }} extends Model<{
+{{ columns }}
+}> {
+    // Additional methods or properties can be added here
+}
