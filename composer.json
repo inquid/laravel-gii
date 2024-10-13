@@ -1,17 +1,17 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "inquid/laravel-gii",
+    "description": "CRUD generator inspired in Gii",
     "keywords": [
-        ":vendor_name",
+        "inquid",
         "laravel",
-        ":package_slug"
+        "laravel-gii"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/inquid/laravel-gii",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Inquid SAS de CV",
+            "email": "luisarmando1234@gmail.com",
             "role": "Developer"
         }
     ],
@@ -35,19 +35,19 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src/",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories/"
+            "Inquid\\LaravelGii\\": "src/",
+            "Inquid\\LaravelGii\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests/",
+            "Inquid\\LaravelGii\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/"
         }
     },
     "scripts": {
         "post-autoload-dump": "@composer run prepare",
-        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "clear": "@php vendor/bin/testbench package:purge-laravel-gii --ansi",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
         "build": [
             "@composer run prepare",
@@ -73,10 +73,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "Inquid\\LaravelGii\\LaravelGiiServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "LaravelGii": "Inquid\\LaravelGii\\Facades\\LaravelGii"
             }
         }
     },

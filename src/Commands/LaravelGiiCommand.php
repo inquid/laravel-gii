@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Inquid\LaravelGii\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class LaravelGiiCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-gii';
 
     public $description = 'My command';
 
