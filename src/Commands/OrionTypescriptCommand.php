@@ -148,25 +148,12 @@ class OrionTypescriptCommand extends Command
     {
         $type = Schema::getColumnType($table, $column);
 
-        switch ($type) {
-            case 'integer':
-            case 'bigint':
-            case 'smallint':
-            case 'tinyint':
-            case 'float':
-            case 'double':
-            case 'decimal':
-                return 'number';
-            case 'boolean':
-                return 'boolean';
-            case 'json':
-                return 'any';
-            case 'datetime':
-            case 'timestamp':
-            case 'date':
-                return 'Date';
-            default:
-                return 'string';
-        }
+        return match ($type) {
+            'integer', 'bigint', 'smallint', 'tinyint', 'float', 'double', 'decimal' => 'number',
+            'boolean' => 'boolean',
+            'json' => 'any',
+            'datetime', 'timestamp', 'date' => 'Date',
+            default => 'string',
+        };
     }
 }
