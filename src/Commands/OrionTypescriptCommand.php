@@ -4,7 +4,6 @@ namespace Inquid\LaravelGii\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Config\Repository;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class OrionTypescriptCommand extends Command
@@ -26,17 +25,18 @@ class OrionTypescriptCommand extends Command
     protected $description = 'Generate Orion SDK TypeScript models based on the Laravel model';
 
     /**
-     * @var Repository
+     * @var \Illuminate\Contracts\Config\Repository
      */
     protected $config;
 
     /**
      * Create a new command instance.
+     *
+     * @param \Illuminate\Contracts\Config\Repository $config
      */
     public function __construct(Repository $config)
     {
         parent::__construct();
-
         $this->config = $config;
     }
 
@@ -48,9 +48,8 @@ class OrionTypescriptCommand extends Command
         $controller = $this->argument('controller');
         $modelClass = $this->getModelClassFromController($controller);
 
-        if (! class_exists($modelClass)) {
+        if (!class_exists($modelClass)) {
             $this->error("Model for controller $controller does not exist.");
-
             return;
         }
 
@@ -65,17 +64,20 @@ class OrionTypescriptCommand extends Command
 
     /**
      * Get the model class name from the controller name.
+     *
+     * @param string $controller
+     * @return string
      */
     protected function getModelClassFromController(string $controller): string
     {
         $modelName = Str::replaceLast('Controller', '', $controller);
-
         return "App\\Models\\$modelName";
     }
 
     /**
      * Get the database connection for the model.
      *
+     * @param $modelInstance
      * @return string
      */
     protected function getConnection($modelInstance)
@@ -85,6 +87,9 @@ class OrionTypescriptCommand extends Command
 
     /**
      * Get the schema name for the given connection.
+     *
+     * @param string $connection
+     * @return string
      */
     protected function getSchema(string $connection): string
     {
@@ -93,6 +98,9 @@ class OrionTypescriptCommand extends Command
 
     /**
      * Generate the Orion TypeScript model.
+     *
+     * @param string $controller
+     * @param string $table
      */
     protected function generateOrionModel(string $controller, string $table)
     {
@@ -100,17 +108,15 @@ class OrionTypescriptCommand extends Command
         $content = "import {Model} from \"@tailflow/laravel-orion/lib/model\";\n\n";
         $content .= "export class $modelName extends Model<{\n";
 
-        $columns = Schema::getColumnListing($table);
+        $columns = \Schema::getColumnListing($table);
         foreach ($columns as $column) {
             $type = 'string'; // You could enhance this to detect the proper TypeScript type based on the column type.
             $content .= "    $column: $type,\n";
         }
 
-        $content .= "}>\n{
+        $content .= "}>\n{\n    \n}";
 
-}";
-
-        $outputPath = base_path("resources/js/models/$modelName.ts");
+        $outputPath = base_path($this->config->get('gii.output_path', "resources/js/models/$modelName.ts"));
         file_put_contents($outputPath, $content);
     }
 }
